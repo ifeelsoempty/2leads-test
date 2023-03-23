@@ -57,7 +57,6 @@ export const UserTable: React.FC = () => {
 
   // Добавить Redux
   // Добавить селект количества айтемов на странице
-  // Поправить верстку чтобы все было ровно
 
   return (
     <div className={styles.container}>
