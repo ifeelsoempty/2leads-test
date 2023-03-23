@@ -1,10 +1,15 @@
-import { UserTable } from './components/UserTable';
+import { Provider } from "react-redux";
+
+import { UserTable } from "./components/UserTable";
+import { store } from "./store/store";
 
 function App() {
   return (
-    <div className="App">
-      <UserTable />
-    </div>
+    <Provider store={store}>
+      <div className="App">
+        <UserTable />
+      </div>
+    </Provider>
   );
 }
 

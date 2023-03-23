@@ -25,6 +25,7 @@
 
 ## Использованные технологии
 - React
+- Redux
 - TypeScript
 - Ant Design
 - CSS-modules

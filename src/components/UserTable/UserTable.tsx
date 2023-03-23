@@ -1,71 +1,65 @@
-import React, { useState, useEffect } from 'react';
-import { Table, Input, Select } from 'antd';
+import React, { useEffect } from "react";
+import { Table, Input, Select } from "antd";
+import { useDispatch, useSelector } from "react-redux";
 
-import { User } from './interfaces';
-import { columns, fetchUsers } from './helpers';
+import { columns } from "./columns";
+import { AppDispatch } from "../../store/store";
+import {
+  getUsers,
+  selectFilteredUsers,
+  selectUserTable,
+  setCurrentPage,
+  setSearchText,
+  setSelectedCity,
+} from "../../store/slices/userTable";
 
-import styles from './UserTable.module.css';
+import styles from "./UserTable.module.css";
 
-const { Search } = Input;
 const { Option } = Select;
 
-const DEFAULT_SELECT_VALUE = "all"
-const PAGE_SIZE = 5;
+const DEFAULT_SELECT_VALUE = "all";
+const PAGE_SIZE = 3;
 
 export const UserTable: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
-  const [searchText, setSearchText] = useState<string>('');
-  const [selectedCity, setSelectedCity] = useState<string>('');
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { users, searchText, selectedCity, currentPage } =
+    useSelector(selectUserTable);
+
+  const filteredUsers = useSelector(selectFilteredUsers);
 
   useEffect(() => {
-    const getUsers = async () => {
-      const data = await fetchUsers();
-      const users = data.map((user) => ({ ...user, ...user.address }))
-      setUsers(users);
-      setFilteredUsers(users);
-    };
-    getUsers();
-  }, []);
+    dispatch(getUsers());
+  }, [dispatch]);
 
-  useEffect(() => {
-    const filtered = users.filter(
-      (user) =>
-        (user.name.toLowerCase().includes(searchText.toLowerCase()) ||
-          user.email.toLowerCase().includes(searchText.toLowerCase()) ||
-          user.phone.toLowerCase().includes(searchText.toLowerCase()) ||
-          user.city.toLowerCase().includes(searchText.toLowerCase())) &&
-        (selectedCity === '' || user.city === selectedCity)
-    );
-    setFilteredUsers(filtered);
-  }, [users, searchText, selectedCity]);
-
-  const handleSearch = (value: string) => {
-    setSearchText(value);
-    setCurrentPage(1);
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setSearchText(e.target.value));
+    dispatch(setCurrentPage(1));
   };
 
   const handleCityChange = (value: string) => {
-    setSelectedCity(value !== DEFAULT_SELECT_VALUE ? value : '');
-    setCurrentPage(1)
+    dispatch(setSelectedCity(value !== DEFAULT_SELECT_VALUE ? value : ""));
+    dispatch(setCurrentPage(1));
   };
 
   const handlePaginationChange = (page: number) => {
-    setCurrentPage(page);
+    dispatch(setCurrentPage(page));
   };
-
-  // Добавить Redux
-  // Добавить селект количества айтемов на странице
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <Search placeholder="Ищите по имени, городу, почте или телефону" onSearch={handleSearch} />
-        <Select className={styles.select} value={selectedCity || 'all'} onChange={handleCityChange}>
-          <Option value={DEFAULT_SELECT_VALUE}>
-            Все
-          </Option>
+        <Input
+          placeholder="Ищите по имени, городу, почте или телефону"
+          value={searchText}
+          onChange={handleSearch}
+        />
+        <Select
+          className={styles.select}
+          value={selectedCity || "all"}
+          onChange={handleCityChange}
+        >
+          <Option value={DEFAULT_SELECT_VALUE}>Все</Option>
           {Array.from(new Set(users.map((user) => user.city))).map((city) => (
             <Option key={city} value={city}>
               {city}
@@ -75,10 +69,13 @@ export const UserTable: React.FC = () => {
       </div>
       <Table
         columns={columns}
-        dataSource={filteredUsers.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)}
+        dataSource={filteredUsers.slice(
+          (currentPage - 1) * PAGE_SIZE,
+          currentPage * PAGE_SIZE
+        )}
         pagination={{
           current: currentPage,
-          pageSize: PAGE_SIZE, 
+          pageSize: PAGE_SIZE,
           total: filteredUsers.length,
           onChange: handlePaginationChange,
         }}
