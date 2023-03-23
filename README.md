@@ -28,4 +28,3 @@
 - React
 - Redux
 - Ant Design
-- CSS-modules
