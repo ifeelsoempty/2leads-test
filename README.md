@@ -24,8 +24,8 @@
 + Откройте браузер и перейдите по адресу http://localhost:3000
 
 ## Использованные технологии
+- TypeScript
 - React
 - Redux
-- TypeScript
 - Ant Design
 - CSS-modules
