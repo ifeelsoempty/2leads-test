@@ -1,5 +1,5 @@
 import { ColumnsType } from "antd/es/table";
-import { User } from "./interfaces";
+import { User } from "../../store/slices/userTable/interfaces";
 
 export const columns: ColumnsType<User> = [
   {

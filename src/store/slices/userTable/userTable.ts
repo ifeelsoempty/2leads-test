@@ -5,16 +5,9 @@ import {
   createSelector,
 } from "@reduxjs/toolkit";
 
-import { fetchUsers } from "../../api/users/users";
-import { User } from "../../components/UserTable/interfaces";
-import { RootState } from "../store";
-
-interface UserTableState {
-  users: User[];
-  searchText: string;
-  selectedCity: string;
-  currentPage: number;
-}
+import { fetchUsers } from "../../../api/users/users";
+import { RootState } from "../../store";
+import { User, UserTableState } from "./interfaces";
 
 const initialState: UserTableState = {
   users: [],

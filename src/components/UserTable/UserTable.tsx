@@ -11,7 +11,7 @@ import {
   setCurrentPage,
   setSearchText,
   setSelectedCity,
-} from "../../store/slices/userTable";
+} from "../../store/slices/userTable/userTable";
 
 import styles from "./UserTable.module.css";
 
